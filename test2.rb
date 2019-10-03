@@ -93,6 +93,13 @@ projects.data_validation(
   value: "=Country_names"
 )
 
+# Add boolean validation
+projects.data_validation(
+    'M2:M50',
+    validate: 'list',
+    value: [0, 1]
+)
+
 # Add date validation
 date_format = workbook.add_format(num_format: 'dd-mm-yyyy')
 projects.set_column(6, 0, 10, date_format)
