@@ -11,14 +11,19 @@ projects = workbook.add_worksheet('Projects (h2)')
 grants = workbook.add_worksheet('Grants (h3) + spend data')
 lookups = workbook.add_worksheet('Lookups')
 
-# Set open worksheet
+# Defined names
+workbook.define_name('Country_names', 'Lookups!$B$2:$B$252')
+workbook.define_name('Country_codes', 'Lookups!$A$2:$A$252')
+
+# Set active worksheet on Excel open
 programmes.activate
 
 # Set up some cell formats
-header_bold = workbook.add_format(bold: 1)
-header_bold_grey = workbook.add_format(bold: 1, bg_color: 23) # grey
-output = workbook.add_format(bg_color: 12) # blue
-read_only = workbook.add_format(bg_color: 22) # light grey
+header_bold = workbook.add_format(bold: 1, border: 1)
+header_bold_grey = workbook.add_format(bold: 1, bg_color: 23, border: 1) # grey
+output = workbook.add_format(bg_color: 12, border: 1) # blue
+read_only = workbook.add_format(bg_color: 22, border: 1) # light grey
+example_text = workbook.add_format(color: 22)
 
 # Set up some headers
 programmes_header = ['Unique BEIS ID', 'Programme Title', 'Budget']
@@ -85,7 +90,14 @@ programmes.set_column(0, 2, 10, read_only)
 projects.data_validation(
   'D2:D50',
   validate: 'list',
-  value: "='Lookups'!$B$2:$B$252"
+  value: "=Country_names"
 )
+
+# Add date validation
+date_format = workbook.add_format(num_format: 'dd-mm-yyyy')
+projects.set_column(6, 0, 10, date_format)
+projects.set_column(7, 0, 10, date_format)
+projects.write(1, 6, 'dd-mm-yy', example_text)
+projects.write(1, 7, 'dd-mm-yy', example_text)
 
 workbook.close
