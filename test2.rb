@@ -7,9 +7,9 @@ workbook = WriteXLSX.new('tracker.xlsx')
 
 # Add sheets with names
 programmes = workbook.add_worksheet('Programmes (h1)')
-projects = workbook.add_worksheet('Projects (h2)')
-grants = workbook.add_worksheet('Grants (h3) + spend data')
-lookups = workbook.add_worksheet('Lookups')
+projects   = workbook.add_worksheet('Projects (h2)')
+grants     = workbook.add_worksheet('Grants (h3) + spend data')
+lookups    = workbook.add_worksheet('Lookups')
 
 # Defined names
 workbook.define_name('Country_names', 'Lookups!$B$2:$B$252')
@@ -18,12 +18,36 @@ workbook.define_name('Country_codes', 'Lookups!$A$2:$A$252')
 # Set active worksheet on Excel open
 programmes.activate
 
+# Set up some custom colours
+# So the first param here (index) is because you're actually overwriting
+# the existing colour index (8..64) with your own colours
+# So weird.
+dark_grey     = workbook.set_custom_color(10, 174, 170, 170)
+grey          = workbook.set_custom_color(11, 208, 206, 206)
+light_grey    = workbook.set_custom_color(12, 217, 217, 217)
+lightest_grey = workbook.set_custom_color(13, 242, 242, 242)
+dark_blue     = workbook.set_custom_color(14, 0, 112, 192)
+light_blue    = workbook.set_custom_color(15, 0, 176, 240)
+purple        = workbook.set_custom_color(16, 112, 48, 160)
+green         = workbook.set_custom_color(17, 169, 208, 142)
+amber         = workbook.set_custom_color(18, 244, 176, 132)
+red           = workbook.set_custom_color(19, 252, 104, 110)
+blue          = workbook.set_custom_color(20, 68, 194, 196)
+
 # Set up some cell formats
-header_bold = workbook.add_format(bold: 1, border: 1)
-header_bold_grey = workbook.add_format(bold: 1, bg_color: 23, border: 1) # grey
-output = workbook.add_format(bg_color: 12, border: 1) # blue
-read_only = workbook.add_format(bg_color: 22, border: 1) # light grey
-example_text = workbook.add_format(color: 22)
+header_bold      = workbook.add_format(bold: 1, border: 1)
+header_bold_grey = workbook.add_format(bold: 1, bg_color: dark_grey, border: 1)
+output           = workbook.add_format(bg_color: light_blue, border: 1)
+read_only        = workbook.add_format(bg_color: light_grey, border: 1)
+example_text     = workbook.add_format(color: dark_grey)
+
+status_grey                = workbook.add_format(bg_color: grey)
+status_green               = workbook.add_format(bg_color: green)
+status_red                 = workbook.add_format(bg_color: red)
+status_amber               = workbook.add_format(bg_color: amber)
+status_blue                = workbook.add_format(bg_color: blue)
+status_no_longer_happening = workbook.add_format(bg_color: lightest_grey)
+status_delivery            = workbook.add_format(bg_color: dark_grey)
 
 # Set up some headers
 programmes_header = ['Unique BEIS ID', 'Programme Title', 'Budget']
@@ -99,6 +123,16 @@ projects.data_validation(
     validate: 'list',
     value: [0, 1]
 )
+
+# Add status lookups
+lookups.write('C1', 'Statuses', header_bold)
+lookups.write('C2', 'GREY', status_grey)
+lookups.write('C3', 'GREEN', status_green)
+lookups.write('C4', 'AMBER', status_amber)
+lookups.write('C5', 'RED', status_red)
+lookups.write('C6', 'BLUE', status_blue)
+lookups.write('C7', 'No Longer Happening', status_no_longer_happening)
+lookups.write('C8', 'Delivery', status_delivery)
 
 # Add date validation
 date_format = workbook.add_format(num_format: 'dd-mm-yyyy')
