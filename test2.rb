@@ -12,8 +12,9 @@ grants     = workbook.add_worksheet('Grants (h3) + spend data')
 lookups    = workbook.add_worksheet('Lookups')
 
 # Defined names
-workbook.define_name('Country_names', 'Lookups!$B$2:$B$252')
-workbook.define_name('Country_codes', 'Lookups!$A$2:$A$252')
+workbook.define_name('Country_names', 'Lookups!$B$1:$B$252')
+workbook.define_name('Country_codes', 'Lookups!$A$1:$A$252')
+workbook.define_name('Statuses', 'Lookups!$C$1:$C$8')
 
 # Set active worksheet on Excel open
 programmes.activate
@@ -85,9 +86,28 @@ grants_header = [
   'Q3 2021/22 Forecast',
   'Q4 2021/22 Forecast'
 ]
+lookups_header = [
+    'Countries',
+    '',
+    'Statuses',
+    '',
+    'Pillars',
+    '',
+    'Match type',
+    '',
+    'ODA Considerations',
+    '',
+    'GCRF Challenge Areas',
+    '',
+    'Aid Types',
+    '',
+    'Channel of Delivery Codes',
+    '',
+    'Sector Codes'
+]
 
 # Populate Lookups
-countries_csv = CSV.new(File.open('countries.csv').read)
+countries_csv = CSV.new(File.open('countries.csv').read, headers: true)
 codes = []
 names = []
 countries_csv.read.each do |row|
@@ -96,12 +116,13 @@ countries_csv.read.each do |row|
 end
 
 countries = [codes, names]
-lookups.write(0, 0, countries)
+lookups.write(1, 0, countries)
 
 # Write headers
 programmes.write_row(0, 0, programmes_header, header_bold_grey)
 projects.write(0, 0, projects_header, header_bold)
 grants.write(0, 0, grants_header, header_bold)
+lookups.write(0, 0, lookups_header, header_bold)
 
 # Set colours
 grants.set_column(3, 0, 10, output)
@@ -117,15 +138,20 @@ projects.data_validation(
   value: "=Country_names"
 )
 
+projects.data_validation(
+  'F2:F50',
+  validate: 'list',
+  value: '=Statuses'
+)
+
 # Add boolean validation
 projects.data_validation(
-    'M2:M50',
+    'M1:M50',
     validate: 'list',
     value: [0, 1]
 )
 
 # Add status lookups
-lookups.write('C1', 'Statuses', header_bold)
 lookups.write('C2', 'GREY', status_grey)
 lookups.write('C3', 'GREEN', status_green)
 lookups.write('C4', 'AMBER', status_amber)
