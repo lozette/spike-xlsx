@@ -10,6 +10,7 @@ programmes = workbook.add_worksheet('Programmes (h1)')
 projects   = workbook.add_worksheet('Projects (h2)')
 grants     = workbook.add_worksheet('Grants (h3) + spend data')
 lookups    = workbook.add_worksheet('Lookups')
+worksheets = [programmes, projects, grants, lookups]
 
 # Defined names
 workbook.define_name('Country_names', 'Lookups!$B$1:$B$252')
@@ -87,23 +88,23 @@ grants_header = [
   'Q4 2021/22 Forecast'
 ]
 lookups_header = [
-    'Countries',
-    '',
-    'Statuses',
-    '',
-    'Pillars',
-    '',
-    'Match type',
-    '',
-    'ODA Considerations',
-    '',
-    'GCRF Challenge Areas',
-    '',
-    'Aid Types',
-    '',
-    'Channel of Delivery Codes',
-    '',
-    'Sector Codes'
+  'Countries',
+  '',
+  'Statuses',
+  '',
+  'Pillars',
+  '',
+  'Match type',
+  '',
+  'ODA Considerations',
+  '',
+  'GCRF Challenge Areas',
+  '',
+  'Aid Types',
+  '',
+  'Channel of Delivery Codes',
+  '',
+  'Sector Codes'
 ]
 
 # Populate Lookups
@@ -168,7 +169,10 @@ projects.write(1, 6, 'dd-mm-yy', example_text)
 projects.write(1, 7, 'dd-mm-yy', example_text)
 
 # Lock worksheet
-lookups.protect
+lookups.protect('Global123!')
 lookups.set_tab_color(purple)
+
+# Freeze panes
+worksheets.each { |w| w.freeze_panes('A2') }
 
 workbook.close
