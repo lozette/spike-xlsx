@@ -168,7 +168,16 @@ projects.set_column(7, 0, 10, date_format)
 projects.write(1, 6, 'dd-mm-yy', example_text)
 projects.write(1, 7, 'dd-mm-yy', example_text)
 
-# Lock worksheet
+# Formulae
+# =INDEX('Projects (h2)'!$A$2:$A$9999, MATCH(B2, 'Projects (h2)'!$C$2:$C$9999))
+formula_array = []
+(2..50).each do |index|
+  formula_array << "=INDEX('Projects (h2)'!$A$2:$A$9999, MATCH(B#{index}, 'Projects (h2)'!$C$2:$C$9999))"
+end
+grants.write(1, 0, [formula_array])
+
+# Lock worksheets
+programmes.protect('Global123!')
 lookups.protect('Global123!')
 lookups.set_tab_color(purple)
 
