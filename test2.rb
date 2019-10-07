@@ -167,4 +167,8 @@ projects.set_column(7, 0, 10, date_format)
 projects.write(1, 6, 'dd-mm-yy', example_text)
 projects.write(1, 7, 'dd-mm-yy', example_text)
 
+# Lock worksheet
+lookups.protect
+lookups.set_tab_color(purple)
+
 workbook.close
